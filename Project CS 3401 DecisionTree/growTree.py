@@ -1,33 +1,34 @@
 import numpy as np
 import pandas as pd
 import json
-def id3(data, target, columns, tree):
+def id3(data, target, columns, tree,dataDomain,parent):
     unique_targets = np.unique(data[target])
 
-    if len(unique_targets) == 1:
+    if len(data)==0:
+        tree[0]=str(parent[target].value_counts().argmax())[:-2]
+        return 
+    elif len(unique_targets) == 1:
         # Insert code here that assigns the "label" field to the node dictionary
         if 1 in unique_targets:
-            tree[0]=1
+            tree[0]=str(1)
         else:
-            tree[0]=2
-        return
-    elif len(data)==0:
-        tree[0]=1
+            tree[0]=str(2)
         return
     elif len(columns)==0:
-        tree[0]=1
+        tree[0]=str(data[target].value_counts().argmax())[:-2]
         return
     else:
+        parent=data
         best_column = find_best_column(data, target, columns)
         # Insert code here that assigns the "column" and "median" fields to the node dictionary
         split_dict = []
-        for i in np.unique(data[best_column]):
-            split_dict.append([str(i)[:-2],data[data[best_column] == i]])
+        for i in dataDomain[best_column].keys():
+            split_dict.append([i,data[data[best_column] == float(i)]])
         tree[0]=best_column
 
         for name, split in split_dict:
             tree[1][name] = [None,{}]
-            id3(split, target, columns[columns!=best_column], tree[1][name])
+            id3(split, target, columns[columns!=best_column], tree[1][name],dataDomain,parent)
 
 def find_best_column(data,target,columns):
     best_columns=np.array([])
@@ -72,15 +73,7 @@ tree = [None,{}]
 data=np.loadtxt("train.txt")
 data=data.T
 data=pd.DataFrame(data,columns=["RISK","AGE", "CRED_HIS","INCOME","RACE","HEALTH"])
-# with open("deDomain.txt","r") as g:
-#     dataDesc=json.load(g)
-# for i in data.columns:
-#     data[i]=data[i].astype(str).str[:-2]
-#     data[i]=data[i].map(dataDesc[i])
-    
-# This list will let us number the nodes  
-# It has to be a list so we can access it inside the function
-# Call the function on our data to set the counters properly
-data.head()
-id3(data, "RISK", np.array(["AGE", "CRED_HIS","INCOME","RACE","HEALTH"]), tree)
+with open("deDomain.txt","r") as g:
+    dataDomain=json.load(g)
+id3(data, "RISK", np.array(["AGE", "CRED_HIS","INCOME","RACE","HEALTH"]),tree,dataDomain,parent=None)
 print(tree)
