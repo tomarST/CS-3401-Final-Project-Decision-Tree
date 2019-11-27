@@ -2,10 +2,11 @@ import numpy as np
 import pandas as pd
 import json
 
-def predict(tree,data,columnsData):
+def predict(tree,data):
     node=tree
     prediction=[]
     for i in range(len(data)):
+        node=tree
         new_data=data.iloc[i,:]
         while type(node) is list:
             v=new_data[node[0]]
@@ -24,8 +25,6 @@ def main(fname):
     data=pd.DataFrame(data,columns=columnsData)
     with open(fname,"r") as f:
         tree=json.load(f)
-    prediction=predict(tree,data,columnsData)
+    prediction=predict(tree,data)
     accuracy_ptg=accuracy(prediction,data["RISK"])
-    print(accuracy_ptg)
     return accuracy_ptg
-main("treeFileFull.txt")
