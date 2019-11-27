@@ -69,11 +69,15 @@ def entropy(a):
     #Fill in the missing part here
 # Create a dictionary to hold the tree  
 # It has to be outside of the function so we can access it later
-tree = [None,{}]
-data=np.loadtxt("train.txt")
-data=data.T
-data=pd.DataFrame(data,columns=["RISK","AGE", "CRED_HIS","INCOME","RACE","HEALTH"])
-with open("deDomain.txt","r") as g:
-    dataDomain=json.load(g)
-id3(data, "RISK", np.array(["AGE", "CRED_HIS","INCOME","RACE","HEALTH"]),tree,dataDomain,parent=None)
-print(tree)
+def main():
+    tree = [None,{}]
+    data=np.loadtxt("train.txt")
+    data=data.T
+    data=pd.DataFrame(data,columns=["RISK","AGE", "CRED_HIS","INCOME","RACE","HEALTH"])
+    with open("deDomain.txt","r") as g:
+        dataDomain=json.load(g)
+    id3(data, "RISK", np.array(["AGE", "CRED_HIS","INCOME","RACE","HEALTH"]),tree,dataDomain,parent=None)
+    with open("treeFileFull.txt","w") as f:
+        json.dump(tree,f)
+main()
+
