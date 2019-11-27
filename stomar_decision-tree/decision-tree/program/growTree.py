@@ -51,7 +51,8 @@ def mutualInfo(r1, r2):
         for j in np.unique(r2):
             Sab=len(r1[r2==j][r1[r2==j]==i])
             Sb=len(r2[r2==j])
-            mutualDep+=(-(Sab)/S)*np.log2((Sab)/(Sb))
+            if(Sab!=0):
+                mutualDep+=(-(Sab)/S)*np.log2((Sab)/(Sb))
     return mutualDep
 
 
@@ -77,12 +78,12 @@ def entropy(a):
 # It has to be outside of the function so we can access it later
 def main():
     tree = []
-    data=np.loadtxt("train.txt")
+    data=np.loadtxt("../data/train.txt")
     data=data.T
     data=pd.DataFrame(data,columns=["RISK","AGE", "CRED_HIS","INCOME","RACE","HEALTH"])
-    with open("deDomain.txt","r") as g:
+    with open("../data/deDomain.txt","r") as g:
         dataDomain=json.load(g)
     id3(data, "RISK", np.array(["AGE", "CRED_HIS","INCOME","RACE","HEALTH"]),tree,dataDomain,parent=None,dictionary=None)
-    with open("treeFileFull.txt","w") as f:
+    with open("../data/treeFileFull.txt","w") as f:
         json.dump(tree,f)
-main()
+    return "treeFileFull.txt"
