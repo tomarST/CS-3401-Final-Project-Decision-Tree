@@ -85,4 +85,3 @@ def main():
     id3(data, "RISK", np.array(["AGE", "CRED_HIS","INCOME","RACE","HEALTH"]),tree,dataDomain,parent=None,dictionary=None)
     with open("treeFileFull.txt","w") as f:
         json.dump(tree,f)
-main()
