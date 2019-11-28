@@ -87,4 +87,3 @@ def main():
     with open("../data/treeFileFull.txt","w") as f:
         json.dump(tree,f)
     return "treeFileFull.txt"
-main()
